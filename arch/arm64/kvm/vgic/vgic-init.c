@@ -116,6 +116,11 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
 	else
 		INIT_LIST_HEAD(&kvm->arch.vgic.rd_regions);
 
+	if (type == KVM_DEV_TYPE_ARM_VGIC_V3)
+		/* Set ID_AA64PFR0_EL1.GIC to 1 */
+		(void)kvm_set_id_reg_feature(kvm, SYS_ID_AA64PFR0_EL1,
+				     ID_AA64PFR0_GIC3, ID_AA64PFR0_GIC_SHIFT);
+
 out_unlock:
 	unlock_all_vcpus(kvm);
 	return ret;
