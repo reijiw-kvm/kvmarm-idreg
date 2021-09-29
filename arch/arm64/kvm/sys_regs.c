@@ -1859,11 +1859,8 @@ static int __set_id_reg(struct kvm_vcpu *vcpu,
 		/* The value is same as the current value. Nothing to do. */
 		return 0;
 
-	/*
-	 * Don't allow to modify the register's value if the register is raz,
-	 * or the reg doesn't have the id_reg_info.
-	 */
-	if (raz || !GET_ID_REG_INFO(encoding))
+	/* Don't allow to modify the register's value if the register is raz. */
+	if (raz)
 		return -EINVAL;
 
 	/*
