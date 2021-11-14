@@ -3636,3 +3636,7 @@ int kvm_set_id_reg_feature(struct kvm *kvm, u32 id, u8 field_shift, u8 fval)
 
 	return __modify_kvm_id_reg(kvm, id, val, preserve_mask);
 }
+
+#if IS_ENABLED(CONFIG_KVM_KUNIT_TEST)
+#include "sys_regs_test.c"
+#endif
