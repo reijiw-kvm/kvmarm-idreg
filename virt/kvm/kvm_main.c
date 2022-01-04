@@ -3686,6 +3686,7 @@ static long kvm_vcpu_ioctl(struct file *filp,
 	int r;
 	struct kvm_fpu *fpu = NULL;
 	struct kvm_sregs *kvm_sregs = NULL;
+	struct kvm *kvm = vcpu->kvm;
 
 	if (vcpu->kvm->mm != current->mm || vcpu->kvm->vm_dead)
 		return -EIO;
@@ -3723,6 +3724,14 @@ static long kvm_vcpu_ioctl(struct file *filp,
 			if (oldpid)
 				synchronize_rcu();
 			put_pid(oldpid);
+
+			/*
+			 * Since we land here even on the first vCPU run,
+			 * we can mark that the VM has started running.
+			 */
+			mutex_lock(&kvm->lock);
+			kvm->vm_started = true;
+			mutex_unlock(&kvm->lock);
 		}
 		r = kvm_arch_vcpu_ioctl_run(vcpu);
 		trace_kvm_userspace_exit(vcpu->run->exit_reason, r);

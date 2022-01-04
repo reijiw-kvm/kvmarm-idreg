@@ -623,6 +623,7 @@ struct kvm {
 	struct notifier_block pm_notifier;
 #endif
 	char stats_id[KVM_STATS_NAME_SIZE];
+	bool vm_started;
 };
 
 #define kvm_err(fmt, ...) \
@@ -1665,6 +1666,8 @@ static inline bool kvm_check_request(int req, struct kvm_vcpu *vcpu)
 		return false;
 	}
 }
+
+#define kvm_vm_has_started(kvm) (kvm->vm_started)
 
 extern bool kvm_rebooting;
 
